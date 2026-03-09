@@ -1,0 +1,9 @@
+__Pycache__
+*.pyc
+.env
+*.db
+*.png
+bin/*
+lib/*
+lib64/*
+include

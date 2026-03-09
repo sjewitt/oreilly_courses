@@ -1,0 +1,238 @@
+import 'dart:math'; // did this auto-import??
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+// NOTE: `this` can be omitted if there is no ambiguity:
+// https://stackoverflow.com/questions/64324559/what-does-mean-of-using-the-this-keyword-in-dart
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  // this widget is the home of the application
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  // see https://www.tops-int.com/blog/mastering-stateless-and-stateful-widgets-in-flutter
+  // THESE are the stateful properties:
+  int _counter = 0;
+
+  // for ex #6, fortune cookie:
+  String _currFortune = "UNOVERRIDDEN";
+
+  // for ex #6, fortune cookie:
+  String _rndFortune = "UNOVERRIDDEN";
+
+  // use this in place of the button pushed message
+  final _fortuneStrings = <String>[
+    "When its dark, put the cat out",
+    "Never eat yellow snow",
+    "Fuck the monks!",
+    "Fish for sardines",
+    "Ride your motorbike",
+    "Sausages for breakfast...",
+    "Sausages for tea...",
+    "Crivens!!",
+  ];
+
+  // can I do this?
+  final rnd = Random();
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  void _decrementCounter() {
+    setState(() {
+      _counter--;
+    });
+  }
+
+  void _setSequentialFortune() {
+    // 6.1: this updates a STATEFUL widget property. Aside: IF a given widget has the SAME property name,
+    // would this outer scope function update both independently?
+    // let's see...
+    setState(() {
+      // note anonymous function here
+      // do the mod calc here instead:
+      _currFortune = _fortuneStrings[_counter % _fortuneStrings.length];
+    });
+  }
+
+  void _setRandomFortune() {
+    // we only need to set the state of the displayed value, so we don't need the rnd declaration inside that closure:
+    // final random = Random();
+    // print("SAUSAGE");
+    // print(rnd); // yes, I can instantiate it as a class var
+    setState(() {
+      // see https://stackoverflow.com/questions/13318207/how-to-get-a-random-number-from-range-in-dart
+      // probably don't want to initialise the random every time?
+
+      // int rnd = random.nextInt(_fortuneStrings.length);
+      // _rndFortune = _fortuneStrings[rnd];
+
+      _rndFortune = _fortuneStrings[rnd.nextInt(_fortuneStrings.length)];
+      // print(_rndFortune);
+    });
+  }
+
+  void _triggerAddMethods() {
+    _incrementCounter();
+    _setSequentialFortune();
+    _setRandomFortune();
+  }
+
+  void _triggerSubtractMethods() {
+    _decrementCounter();
+    _setSequentialFortune();
+    _setRandomFortune();
+  }
+
+  void _resetCounter() {
+    setState(() {
+      _counter = 0;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // `Scaffold` is the root of the display hierarchy
+    return Scaffold(
+      appBar: AppBar(
+        // he removes this in # 5.9
+        // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // title: Text("Fortune Cookies!"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            // 5.10 - adding an image:
+            Image.asset(
+              "assets/images/snaggletooth.jpg",
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
+            ),
+            // He says:
+            Text(
+              "Your fortune is:",
+              style: TextStyle(fontFamily: "monospace", fontSize: 22),
+            ),
+
+            // and doing this will break of course:
+            // Text(_fortuneStrings[_counter]),
+
+            // Text(_fortuneStrings[_counter % _fortuneStrings.length]),
+            // Text((_counter % _fortuneStrings.length).toString()), //debug modulo
+            // // He does this:
+            // Text(
+            //   "${_fortuneStrings[0]}",
+            // ), // 'unnecessary use of string interpolation'
+            // Text(_fortuneStrings[0]), // better...
+            // In fact, this is exactly how he does it... :-) [smug mode]
+
+            // Text(_fortuneStrings[_counter % _fortuneStrings.length]),
+            // for section 5, last but one, he is using a CARD:
+            // NOTE he mentions that `ctrl/.` will open a context menu. It doesnt...
+            // https://stackoverflow.com/questions/71997823/ctrl-dot-makes-e-appear-instead-of-showing-suggestions-in-vscode-on-gnome
+            // It's 'Quick fix' from command pallette - offers - um - quick fixes (here, to wrap the widget in another widget)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                // color: Color.fromARGB(0, 202, 17, 45),
+                // shadowColor: Color.fromRGBO(200, 7, 3, 30),
+                child: Text(_currFortune), // from setState instead.
+              ),
+            ),
+            // Text(_currFortune), // from setState instead.
+            Card(
+              child: Text(_rndFortune), // from setState instead.
+            ),
+            // Text(_rndFortune), // from setState instead.
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '$_counter',
+                  // can obviously use different styles here...
+                  // style: Theme.of(context).textTheme.headlineMedium,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ),
+            // 5.9: He's also adding an ElevatedButton:
+            ElevatedButton(onPressed: _resetCounter, child: Text("Reset")),
+            // Text(
+            //   '$_counter',
+            //   style: Theme.of(context).textTheme.headlineMedium,
+            // ),
+          ],
+        ),
+      ),
+
+      // https://medium.com/codechai/drawer-and-persistent-footer-buttons-in-flutter-d406601fbfa7
+      persistentFooterButtons: <Widget>[
+        TextButton(
+          onPressed: _triggerSubtractMethods,
+          child: const Icon(Icons.remove),
+        ),
+        TextButton(onPressed: _triggerAddMethods, child: const Icon(Icons.add)),
+        // (
+        // onPressed: _triggerAllMethods,
+        // tooltip: 'Increment',
+        // child: const Icon(Icons.add),
+        // ),
+      ],
+
+      // https://stackoverflow.com/questions/55166999/how-to-make-two-floating-action-buttons-in-flutter
+      // floatingActionButton property can accept other than FloatingActionButton:
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // and HERE we can put FloatingActionButtons
+          FloatingActionButton(
+            onPressed: _triggerSubtractMethods,
+            tooltip: 'Decrement',
+            child: const Icon(Icons.remove),
+          ),
+          FloatingActionButton(
+            onPressed: _triggerAddMethods,
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+        ],
+      ),
+      // Can only actually be ONE floatingActionButton property! Hence the above..
+      // floatingActionButton: FloatingActionButton(
+      //   // onPressed: _incrementCounter,
+      //   onPressed: _triggerAddMethods,
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add),
+      // ),
+    );
+  }
+}

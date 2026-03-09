@@ -1,0 +1,3 @@
+# linter, formatter, import sorter. But I'll use pylint...
+# there's a VSCode extension for this too
+ruff
