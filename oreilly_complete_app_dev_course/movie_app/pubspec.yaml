@@ -1,4 +1,4 @@
-name: utip
+name: movie_app
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.10.3
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -35,11 +35,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
-  # for currency formatting
-  intl: ^0.18.1 
-
-  # provider
-  provider: ^6.1.5+1
+  # from course - manually added as VS Code no longer seems to provide the 
+  # shortcut (look for an extension??)
+  # This will be needed pretty much for any project unless trivial
+  # [ask about provider vals and stateLESS widgets!!!!]
+  provider: ^6.1.1
 
 dev_dependencies:
   flutter_test:
@@ -50,7 +50,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

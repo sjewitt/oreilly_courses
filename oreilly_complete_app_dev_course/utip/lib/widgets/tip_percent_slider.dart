@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:utip/providers/tip_calculator_model.dart';
 
 class TipPercentSlider extends StatelessWidget {
   const TipPercentSlider({
@@ -20,11 +22,12 @@ class TipPercentSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sliderProviderOfUTIPModel = Provider.of<TipCalculatorModel>(context);
     return Slider(
       min: 0,
       max: 50,
       value: sliderPos,
-      onChanged: (val) => {setSliderValue(val)},
+      onChanged: (val) => {sliderProviderOfUTIPModel.setSliderValue(val)},
 
       label: '${tipPercentPerPerson.round()}%',
       divisions: 50, // more granular tip slider
